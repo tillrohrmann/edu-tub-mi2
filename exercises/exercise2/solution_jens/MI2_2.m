@@ -3,8 +3,8 @@ clear all;
 close all;
 
 % --- Set Parameters ---
-standard_deviation = 0.05;
-%standard_deviation = 0.1;
+%standard_deviation = 0.05;
+standard_deviation = 0.1;
 %P = 100;
 P = 500;
 density_accuracy = 100; % Constant
@@ -43,7 +43,7 @@ ylabel('Value');
 x_hist = 1:1:256;
 n_hist = hist(img_noised_values,x_hist);
 figure(4);
-plot(x_hist,n_hist);
+bar(x_hist,n_hist);
 title('Histogramm');
 xlabel('Pixel Intensity');
 ylabel('Frequency');
