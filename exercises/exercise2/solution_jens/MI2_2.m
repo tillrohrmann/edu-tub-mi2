@@ -7,7 +7,6 @@ close all;
 standard_deviation = 0.1;
 %P = 100;
 P = 500;
-density_accuracy = 100; % Constant
 windowSizes = 1:1:20;
 
 % --- 3.1 - Data ---
@@ -30,6 +29,7 @@ title('Output Image');
 % 1) Get P random samples of the image
 img_noised_vector = img_noised(:);
 random_samples = randsample(length(img_noised_vector),P);
+img_noised_values = zeros(P,1);
 for i=1:1:P
     img_noised_values(i) = img_noised_vector(random_samples(i))*255;
 end;
@@ -40,29 +40,29 @@ xlabel('Sample');
 ylabel('Value');
 
 % Histogramm plot (show density as histogram)
-x_hist = 1:1:256;
-n_hist = hist(img_noised_values,x_hist);
+x_hist = 0:8:255;
+n_hist = hist(img_noised_values,length(x_hist));
 figure(4);
 bar(x_hist,n_hist);
-title('Histogramm');
+title('Histogramm, Window size = 8');
 xlabel('Pixel Intensity');
 ylabel('Frequency');
+
+estimated_funtion = zeros(size(windowSizes,2),256);
 
 % 2) Estimate Density
 for windowsize = windowSizes
 
-    h = density_accuracy*windowsize;
-    x_estimate = 1:1:256*density_accuracy;
-    y_estimate = zeros(1,256*density_accuracy);
-
-    for bin = 1:1:P
-        for x_e = 1:1:256*density_accuracy
-            y_estimate(x_e) = y_estimate(x_e) + (1/(sqrt(2*pi)*h))*exp(-((x_e-img_noised_values(bin)*density_accuracy)^2)/((2*h^2)));
-        end;
-    end;
+    h = windowsize;
+    x_estimate = (1:256);
+    y_estimate = zeros(1,256);
+    
+    for i = 1:1:P
+        y_estimate = y_estimate + 1/sqrt(2*pi)/h*exp(-(x_estimate-img_noised_values(i)).^2/2/h^2);
+    end
 
     figure(4+windowsize);
-    plot(x_estimate/density_accuracy,y_estimate);
+    plot(x_estimate,y_estimate/P);
     title(strcat('Estimated density - windowsize=',num2str(windowsize)));
     xlabel('Pixel Intensity');
     ylabel('Probabilty');
@@ -75,25 +75,14 @@ end;
 % --- 3.3 - Validation ---
 
 % Get samples of pixels which were not used for the estimation
-not_used_samples = zeros(1,length(img_noised_vector)-P);
-j=1;
-for i=1:1:length(img_noised_vector)
-    if (~(ismember(i,random_samples)))
-        not_used_samples(j) = i;
-        j = j + 1;
-    end;
-end;
+not_used_samples = setdiff((1:length(img_noised_vector))',random_samples);
 
 % Calculate Likelihood values
+not_used_samples_idx = 1+floor(img_noised_vector(not_used_samples)*255);
+
 LogLikelihood = zeros(1,length(windowSizes));
 for windowsize = windowSizes
-    for j = 1:1:length(not_used_samples)
-        index = floor(img_noised_vector(not_used_samples(j))*256*density_accuracy);
-        if index == 0
-            index = 1;
-        end;
-        LogLikelihood(windowsize) = LogLikelihood(windowsize) - log(estimated_funtion(windowsize,index));
-    end;
+    LogLikelihood(windowsize) = sum( -log(estimated_funtion(windowsize,not_used_samples_idx)));
 end;
 
 figure(4+length(windowSizes)+1);
@@ -103,4 +92,4 @@ xlabel('Window Size');
 ylabel('Value');
 
 [min,min_index] = min(LogLikelihood);
-min_index
+min_index;
