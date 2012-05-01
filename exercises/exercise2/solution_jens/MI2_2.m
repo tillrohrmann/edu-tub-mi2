@@ -43,7 +43,7 @@ ylabel('Value');
 x_hist = 0:8:255;
 n_hist = hist(img_noised_values,length(x_hist));
 figure(4);
-bar(x_hist,n_hist);
+bar(x_hist,n_hist/length(img_noised_values)/8);
 title('Histogramm, Window size = 8');
 xlabel('Pixel Intensity');
 ylabel('Frequency');
