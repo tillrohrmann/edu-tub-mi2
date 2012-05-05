@@ -48,31 +48,32 @@ for alpha=1:1:90
         
         % --- not necessary because observations have mean=0 ---
         % 2. term
-        %sum = 0;
-        %for gamma=1:1:90
-        %    sum = sum + rbf_kernel(toy_set(gamma,:),toy_set(beta,:),sigma);
-        %end;
-        %K_gamma_beta = sum/P;
+        sum = 0;
+        for gamma=1:1:90
+            sum = sum + rbf_kernel(toy_set(gamma,:),toy_set(beta,:),sigma);
+        end;
+        K_gamma_beta = sum/P;
         
         % 3. term
-        %sum = 0;
-        %for gamma=1:1:90
-        %    sum = sum + rbf_kernel(toy_set(alpha,:),toy_set(gamma,:),sigma);
-        %end;
-        %K_alpha_gamma = sum/P;
+        sum = 0;
+        for gamma=1:1:90
+            sum = sum + rbf_kernel(toy_set(alpha,:),toy_set(gamma,:),sigma);
+        end;
+        K_alpha_gamma = sum/P;
         
         % 4. term
-        %sum = 0;
-        %for gamma=1:1:90
-        %    for delta=1:1:90
-        %        sum = sum + rbf_kernel(toy_set(gamma,:),toy_set(delta,:),sigma);
-        %    end;
-        %end;
-        %K_gamma_delta = sum/(P*P);
+        sum = 0;
+        for gamma=1:1:90
+            for delta=1:1:90
+                sum = sum + rbf_kernel(toy_set(gamma,:),toy_set(delta,:),sigma);
+            end;
+        end;
+        K_gamma_delta = sum/(P*P);
         
         K_norm(alpha,beta) = K_alpha_beta;% - K_gamma_beta - K_alpha_gamma - K_gamma_delta;
         
     end;
+    disp(num2str(alpha));
 end;
 
 % Calculate coefficients and lambdas
