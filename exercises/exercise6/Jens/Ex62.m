@@ -9,6 +9,7 @@ elements = 500;
 inputSamples = 2*rand(1,elements);
 figure();
 hist(inputSamples);
+title('Uniformly distributed input samples');
 
 % Generate output samples
 mean = 1;
@@ -20,3 +21,4 @@ for i=1:1:elements
 end;
 figure();
 hist(outputSamples);
+title('Laplacian distributed output samples');
