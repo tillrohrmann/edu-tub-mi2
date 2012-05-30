@@ -22,13 +22,12 @@ title('original sound 1');
 subplot(2,1,2);
 plot(s(2,:),'b');
 title('original sound 2');
-soundsc(s(1,:));
-soundsc(s(2,:));
-pause(2.197);
+% soundsc(s(1,:));
+% soundsc(s(2,:));
 
 % Mix sources
-A_rand = rand(1,1);
-A = [0.7, 0.3; 0.3, 0.7]
+A = rand(2,2);
+%A = [0.7, 0.3; 0.3, 0.7]
 x = A*s;
 
 % Play mixed sounds
@@ -40,9 +39,8 @@ title('mixed sound 1');
 subplot(2,1,2);
 plot(x(2,:),'r');
 title('mixed sound 2');
-soundsc(x(1,:));
-soundsc(x(2,:));
-pause(2.197);
+% soundsc(x(1,:));
+% soundsc(x(2,:));
 
 % Permute x randomly
 p = randperm(samples);
@@ -62,9 +60,8 @@ title('mixed permuted sound 1');
 subplot(2,1,2);
 plot(xp(2,:),'m');
 title('mixed permuted sound 2');
-soundsc(xp(1,:));
-soundsc(xp(2,:));
-pause(2.197);
+% soundsc(xp(1,:));
+% soundsc(xp(2,:));
 
 % Calculate correlations
 corr_s_x = corrcoef(s,xp)
@@ -74,7 +71,7 @@ xp(1,:) = xp(1,:) - mean(xp(1,:));
 xp(2,:) = xp(2,:) - mean(xp(2,:));
 
 % Initialize W with random values
-W_start = [2, -1; -1, 2]
+W_start = [2, -1; -1, 2];
 W = W_start;
 
 % --------------------
